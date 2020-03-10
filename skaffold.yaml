@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2alpha4
+kind: Config
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+    - image: skaffold-artifact-todo-service
+      context: src/todo-service
+deploy:
+  helm:
+    releases:
+      - name: skaffold-todo-app
+        chartPath: deploy/helm
+        values:
+          todo-service.image: skaffold-artifact-todo-service

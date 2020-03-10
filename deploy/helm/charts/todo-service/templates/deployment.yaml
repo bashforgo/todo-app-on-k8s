@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "todo-service.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+{{ include "todo-service.pod-labels" . | indent 6 }}
+  template:
+    metadata:
+      labels:
+{{ include "todo-service.pod-labels" . | indent 8 }}
+    spec:
+      containers:
+        - name: {{ include "todo-service.fullname" . }}
+          image: {{ required "todo-service.image is required" .Values.image }}
+          ports:
+            - containerPort: 80

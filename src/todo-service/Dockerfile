@@ -9,3 +9,4 @@ WORKDIR /app
 COPY --from=build /app .
 
 ENTRYPOINT dotnet TodoService.dll
+EXPOSE 80
