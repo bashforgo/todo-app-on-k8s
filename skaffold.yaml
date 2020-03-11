@@ -13,3 +13,12 @@ deploy:
         chartPath: deploy/helm
         values:
           todo-service.image: registry.gitlab.com/speedodevo/todo-app
+profiles:
+  - name: run
+    activation:
+      - command: run
+    patches:
+      - op: add
+        path: /deploy/helm/releases/0/setValues
+        value:
+          todo-service.serviceType: ClusterIP

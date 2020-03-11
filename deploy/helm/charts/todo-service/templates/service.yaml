@@ -5,7 +5,7 @@ metadata:
   annotations:
     dev.okteto.com/auto-ingress: "true"
 spec:
-  type: LoadBalancer
+  type: {{ .Values.serviceType }}
   selector:
 {{ include "todo-service.pod-labels" . | indent 4 }}
   ports:
