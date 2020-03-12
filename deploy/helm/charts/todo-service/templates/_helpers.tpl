@@ -2,7 +2,7 @@
 {{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "todo-service.pod-labels" -}}
+{{- define "todo-service.labels" -}}
 app.kubernetes.io/name: {{ include "todo-service.fullname" . }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}

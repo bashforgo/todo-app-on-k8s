@@ -7,6 +7,6 @@ metadata:
 spec:
   type: {{ .Values.serviceType }}
   selector:
-{{ include "todo-service.pod-labels" . | indent 4 }}
+{{ include "todo-service.labels" . | indent 4 }}
   ports:
     - port: 80

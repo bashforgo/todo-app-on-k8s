@@ -2,14 +2,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "todo-service.fullname" . }}
+  labels:
+{{ include "todo-service.labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-{{ include "todo-service.pod-labels" . | indent 6 }}
+{{ include "todo-service.labels" . | indent 6 }}
   template:
     metadata:
       labels:
-{{ include "todo-service.pod-labels" . | indent 8 }}
+{{ include "todo-service.labels" . | indent 8 }}
     spec:
       containers:
         - name: {{ include "todo-service.fullname" . }}
