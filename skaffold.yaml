@@ -14,11 +14,25 @@ deploy:
         values:
           todo-service.image: registry.gitlab.com/speedodevo/todo-app
 profiles:
-  - name: run
-    activation:
-      - command: run
+  - name: okteto
     patches:
       - op: add
         path: /deploy/helm/releases/0/setValues
         value:
           todo-service.serviceType: ClusterIP
+  - name: dev
+    activation:
+      - command: dev
+    build:
+      tagPolicy:
+        sha256: {}
+      artifacts:
+        - image: registry.gitlab.com/speedodevo/todo-app
+          context: src/todo-service
+          docker:
+            dockerfile: dev.Dockerfile
+          sync:
+            manual:
+              - src: "TodoService/**/*.cs"
+                dest: /src
+                strip: TodoService

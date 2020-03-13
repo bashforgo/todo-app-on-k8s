@@ -2,7 +2,7 @@ default:
   image: registry.gitlab.com/speedodevo/skaffold:v0.0.1
 
   services:
-    - docker:18.09.6-dind
+    - docker:19.03.8-dind
 
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
@@ -11,7 +11,6 @@ default:
     - kubectl config current-context
 
 variables:
-  DOCKER_DRIVER: overlay2
   DOCKER_HOST: tcp://docker:2375
 
 stages:
@@ -20,4 +19,4 @@ stages:
 skaffold:
   stage: deploy
   script:
-    - skaffold run
+    - skaffold run -p okteto
