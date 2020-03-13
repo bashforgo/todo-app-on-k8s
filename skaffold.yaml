@@ -2,8 +2,7 @@ apiVersion: skaffold/v2alpha4
 kind: Config
 build:
   tagPolicy:
-    envTemplate:
-     template: ""
+    gitCommit: {}
   artifacts:
     - image: registry.gitlab.com/speedodevo/todo-app
       context: src/todo-service
