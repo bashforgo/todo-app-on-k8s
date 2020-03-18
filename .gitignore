@@ -1,7 +1,7 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
 
-# Created by https://www.gitignore.io/api/visualstudiocode,linux,aspnetcore,csharp,dotnetcore,node
-# Edit at https://www.gitignore.io/?templates=visualstudiocode,linux,aspnetcore,csharp,dotnetcore,node
+# Created by https://www.gitignore.io/api/visualstudiocode,node,linux,dotnetcore,csharp,aspnetcore,helm
+# Edit at https://www.gitignore.io/?templates=visualstudiocode,node,linux,dotnetcore,csharp,aspnetcore,helm
 
 ### ASPNETCore ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -488,6 +488,10 @@ MigrationBackup/
 /wwwroot/node_modules
 
 
+### Helm ###
+# Chart dependencies
+**/charts/*.tgz
+
 ### Linux ###
 
 # temporary files which can be created if a process still has a handle open of a deleted file
@@ -617,8 +621,9 @@ temp/
 # Ignore all local history of files
 .history
 
-# End of https://www.gitignore.io/api/visualstudiocode,linux,aspnetcore,csharp,dotnetcore,node
+# End of https://www.gitignore.io/api/visualstudiocode,node,linux,dotnetcore,csharp,aspnetcore,helm
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
 .vscode/
+secrets.sh

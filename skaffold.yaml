@@ -13,6 +13,8 @@ deploy:
         chartPath: deploy/helm
         values:
           todo-service.image: registry.gitlab.com/speedodevo/todo-app
+        setValueTemplates:
+          todo-service.postgresql.postgresqlPassword: "{{ .TODO_SERVICE_POSTGRESQL_PASSWORD }}"
 profiles:
   - name: okteto
     patches:

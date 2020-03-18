@@ -13,8 +13,22 @@ spec:
       labels:
 {{ include "todo-service.labels" . | indent 8 }}
     spec:
+      initContainers:
+        - name: "{{ include "todo-service.fullname" . }}-init"
+          image: "{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
+          ports:
+            - containerPort: 80
+          env:
+{{ include "todo-service.postgres-env" . | indent 14 }}
+          command:
+            - sh
+          args:
+            - -c
+            - for i in {1..30}; do if pg_isready -d $POSTGRES_DATABASE -h $POSTGRES_HOST -U $POSTGRES_USERNAME -t 1; then exit 0; fi; done; exit 1
       containers:
         - name: {{ include "todo-service.fullname" . }}
           image: {{ required "todo-service.image is required" .Values.image }}
           ports:
             - containerPort: 80
+          env:
+{{ include "todo-service.postgres-env" . | indent 14 }}

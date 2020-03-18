@@ -1,1 +1,10 @@
 serviceType: LoadBalancer
+postgresql:
+  nameOverride: todo-service-postgresql
+  postgresqlUsername: todo
+  postgresqlDatabase: todo
+  service:
+    port: 5432
+  image:
+    repository: bitnami/postgresql
+    tag: 11.7.0

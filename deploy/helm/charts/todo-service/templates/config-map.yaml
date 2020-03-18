@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "todo-service.fullname" . }}
+  labels:
+{{ include "todo-service.labels" . | indent 4 }}
+data:
+  postgresql-username: "{{ .Values.postgresql.postgresqlUsername }}"
+  postgresql-database: "{{ .Values.postgresql.postgresqlDatabase }}"

@@ -1,0 +1,4 @@
+todo-service:
+  image: image of the todo-service
+  postgresql:
+    postgresqlPassword: the password to use in potgres

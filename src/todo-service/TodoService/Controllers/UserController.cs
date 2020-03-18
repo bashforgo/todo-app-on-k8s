@@ -1,26 +1,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TodoService.Infrastructure;
 using TodoService.Model;
 
 namespace TodoService.Controllers
 {
     [ApiController]
-    [Route("todos")]
-    public class TodoController : ControllerBase
+    [Route("users")]
+    public class UserController : ControllerBase
     {
         private readonly TodoContext Context;
 
-        public TodoController(TodoContext context)
+        public UserController(TodoContext context)
         {
             Context = context;
         }
 
         [HttpGet]
-        public IEnumerable<TodoItem> Get()
+        public IEnumerable<User> Get()
         {
-            return Context.Todos.AsEnumerable();
+            return Context.Users.Include(u => u.Todos).AsEnumerable();
         }
     }
 }
