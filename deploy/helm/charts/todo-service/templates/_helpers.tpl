@@ -11,24 +11,14 @@ app.kubernetes.io/version: {{ .Chart.AppVersion }}
 app.kubernetes.io/component: backend
 {{- end -}}
 
-{{- define "todo-service.postgres-env" }}
-- name: POSTGRES_HOST
-  value: "{{ .Release.Name }}-{{ .Values.postgresql.nameOverride }}"
-- name: POSTGRES_PORT
-  value: "{{ .Values.postgresql.service.port }}"
-- name: POSTGRES_DATABASE
-  valueFrom:
-    configMapKeyRef:
-      name: {{ include "todo-service.fullname" . }}
-      key: postgresql-database
-- name: POSTGRES_USERNAME
-  valueFrom:
-    configMapKeyRef:
-      name: {{ include "todo-service.fullname" . }}
-      key: postgresql-username
-- name: POSTGRES_PASSWORD
-  valueFrom:
-    secretKeyRef:
-      name: {{ include "todo-service.fullname" . }}
-      key: postgresql-password
+{{- define "todo-service.postgres-env" -}}
+env:
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "todo-service.fullname" . }}
+        key: postgresql-password
+envFrom:
+  - configMapRef:
+      name: {{ template "todo-service.fullname" . }}
 {{- end -}}

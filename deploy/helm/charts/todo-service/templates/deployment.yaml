@@ -18,17 +18,18 @@ spec:
           image: "{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
           ports:
             - containerPort: 80
-          env:
-{{ include "todo-service.postgres-env" . | indent 14 }}
-          command:
-            - sh
-          args:
-            - -c
-            - for i in {1..30}; do if pg_isready -d $POSTGRES_DATABASE -h $POSTGRES_HOST -U $POSTGRES_USERNAME -t 1; then exit 0; fi; done; exit 1
+{{ include "todo-service.postgres-env" . | indent 10 }}
+          command: [
+            "sh", "-c",
+            "
+            until pg_isready -d $POSTGRES_DATABASE -h $POSTGRES_HOST -U $POSTGRES_USERNAME -t 1; do
+              sleep 2;
+            done;
+            "
+          ]
       containers:
         - name: {{ include "todo-service.fullname" . }}
           image: {{ required "todo-service.image is required" .Values.image }}
           ports:
             - containerPort: 80
-          env:
-{{ include "todo-service.postgres-env" . | indent 14 }}
+{{ include "todo-service.postgres-env" . | indent 10 }}

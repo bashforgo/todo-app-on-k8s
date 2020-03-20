@@ -5,5 +5,7 @@ metadata:
   labels:
 {{ include "todo-service.labels" . | indent 4 }}
 data:
-  postgresql-username: "{{ .Values.postgresql.postgresqlUsername }}"
-  postgresql-database: "{{ .Values.postgresql.postgresqlDatabase }}"
+  POSTGRES_HOST: "{{ .Release.Name }}-{{ .Values.postgresql.nameOverride }}"
+  POSTGRES_PORT: "{{ .Values.postgresql.service.port }}"
+  POSTGRES_DATABASE: "{{ .Values.postgresql.postgresqlDatabase }}"
+  POSTGRES_USERNAME: "{{ .Values.postgresql.postgresqlUsername }}"
