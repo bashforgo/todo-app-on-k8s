@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "todo-web-ui.fullname" . }}
+  labels:
+{{ include "todo-web-ui.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+{{ include "todo-web-ui.labels" . | indent 6 }}
+  template:
+    metadata:
+      labels:
+{{ include "todo-web-ui.labels" . | indent 8 }}
+    spec:
+      containers:
+        - name: {{ include "todo-web-ui.fullname" . }}
+          image: {{ required "todo-web-ui.image is required" .Values.image }}
+          ports:
+            - containerPort: 80

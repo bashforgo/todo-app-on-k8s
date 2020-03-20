@@ -4,11 +4,9 @@
 
 {{- define "todo-service.labels" -}}
 app.kubernetes.io/name: {{ include "todo-service.fullname" . }}
-helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/version: {{ .Chart.AppVersion }}
+helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 app.kubernetes.io/component: backend
+{{ include "todo-app.shared-labels" . }}
 {{- end -}}
 
 {{- define "todo-service.postgres-env" -}}

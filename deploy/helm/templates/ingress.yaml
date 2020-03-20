@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "todo-app.fullname" . }}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    dev.okteto.com/generate-host: "true"
+  labels:
+{{ include "todo-app.labels" . | indent 4 }}
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /?(.*)
+            backend:
+              serviceName: {{ include "todo-app.todo-web-ui-fullname" . }}
+              servicePort: 80
+          - path: /api/v1/?(.*)
+            backend:
+              serviceName: {{ include "todo-app.todo-service-fullname" . }}
+              servicePort: 80

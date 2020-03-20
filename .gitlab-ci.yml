@@ -7,7 +7,6 @@ default:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - export KUBECONFIG=$KUBECONFIG_OKTETO
-    - echo "$KUBECONFIG"
     - kubectl config current-context
 
 variables:
@@ -19,4 +18,4 @@ stages:
 skaffold:
   stage: deploy
   script:
-    - skaffold run -p okteto
+    - skaffold run

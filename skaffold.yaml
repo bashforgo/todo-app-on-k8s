@@ -4,32 +4,30 @@ build:
   tagPolicy:
     gitCommit: {}
   artifacts:
-    - image: registry.gitlab.com/speedodevo/todo-app
+    - image: registry.gitlab.com/speedodevo/todo-app/todo-service
       context: src/todo-service
+    - image: registry.gitlab.com/speedodevo/todo-app/todo-web-ui
+      context: src/todo-web-ui
 deploy:
   helm:
     releases:
       - name: skaffold-todo-app
         chartPath: deploy/helm
         values:
-          todo-service.image: registry.gitlab.com/speedodevo/todo-app
+          todo-service.image: registry.gitlab.com/speedodevo/todo-app/todo-service
+          todo-web-ui.image: registry.gitlab.com/speedodevo/todo-app/todo-web-ui
         setValueTemplates:
           todo-service.postgresql.postgresqlPassword: "{{ .TODO_SERVICE_POSTGRESQL_PASSWORD }}"
 profiles:
-  - name: okteto
-    patches:
-      - op: add
-        path: /deploy/helm/releases/0/setValues
-        value:
-          todo-service.serviceType: ClusterIP
   - name: dev
     activation:
       - command: dev
+        env: SKAFFOLD_IGNORE_COMMAND_PROFILE=!true
     build:
       tagPolicy:
         sha256: {}
       artifacts:
-        - image: registry.gitlab.com/speedodevo/todo-app
+        - image: registry.gitlab.com/speedodevo/todo-app/todo-service-dev
           context: src/todo-service
           docker:
             dockerfile: dev.Dockerfile
@@ -38,3 +36,22 @@ profiles:
               - src: "TodoService/**/*.cs"
                 dest: /src
                 strip: TodoService
+        - image: registry.gitlab.com/speedodevo/todo-app/todo-web-ui-dev
+          context: src/todo-web-ui
+          docker:
+            dockerfile: dev.Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.tsx?"
+                dest: /src
+    patches:
+      - op: replace
+        path: /deploy/helm/releases/0/values
+        value:
+          todo-service.image: registry.gitlab.com/speedodevo/todo-app/todo-service-dev
+          todo-web-ui.image: registry.gitlab.com/speedodevo/todo-app/todo-web-ui-dev
+      - op: add
+        path: /deploy/helm/releases/0/setValues
+        value:
+          todo-service.serviceType: NodePort
+          todo-web-ui.serviceType: NodePort

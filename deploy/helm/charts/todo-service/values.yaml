@@ -1,4 +1,4 @@
-serviceType: LoadBalancer
+serviceType: ClusterIP
 postgresql:
   nameOverride: todo-service-postgresql
   postgresqlUsername: todo
