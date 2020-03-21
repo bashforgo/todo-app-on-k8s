@@ -18,4 +18,4 @@ stages:
 skaffold:
   stage: deploy
   script:
-    - skaffold run
+    - skaffold run -p okteto

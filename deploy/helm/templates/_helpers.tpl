@@ -8,7 +8,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
 {{- end -}}
 
-{{- define "todo-app.labels" }}
+{{- define "todo-app.labels" -}}
 app.kubernetes.io/name: {{ include "todo-app.fullname" . }}
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 app.kubernetes.io/component: frontend
