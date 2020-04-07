@@ -627,3 +627,7 @@ temp/
 
 .vscode/
 secrets.sh
+
+
+# Ignore DevSpace cache and log folder
+.devspace/

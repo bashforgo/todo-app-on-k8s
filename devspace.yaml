@@ -1,0 +1,86 @@
+version: v1beta7
+images:
+  todo-service:
+    image: registry.gitlab.com/speedodevo/todo-app/todo-service
+    context: src/todo-service
+    dockerfile: src/todo-service/Dockerfile
+    tags:
+      - ${DEVSPACE_GIT_COMMIT}
+      - latest
+  todo-web-ui:
+    image: registry.gitlab.com/speedodevo/todo-app/todo-web-ui
+    context: src/todo-web-ui
+    dockerfile: src/todo-web-ui/Dockerfile
+    tags:
+      - ${DEVSPACE_GIT_COMMIT}
+      - latest
+deployments:
+  - name: devspace
+    helm:
+      chart:
+        name: deploy/helm
+      values:
+        todo-service:
+          image: registry.gitlab.com/speedodevo/todo-app/todo-service
+          postgresql:
+            postgresqlPassword: ${TODO_SERVICE_POSTGRESQL_PASSWORD}
+        todo-web-ui:
+          image: registry.gitlab.com/speedodevo/todo-app/todo-web-ui
+dev:
+  autoReload:
+    deployments:
+      - devspace
+    images:
+      - todo-service
+      - todo-web-ui
+  sync:
+    - imageName: todo-service
+      localSubPath: src/todo-service/TodoService
+      excludePaths:
+        - bin/
+        - obj/
+    - imageName: todo-web-ui
+      localSubPath: src/todo-web-ui
+      excludePaths:
+        - node_modules/
+        - www/
+        - .stencil/
+profiles:
+  - name: okteto
+    patches:
+      - op: add
+        path: deployments[0].helm.valuesFiles
+        value:
+          - deploy/helm/okteto-values.yaml
+  - name: dev
+    replace:
+      images:
+        todo-service:
+          image: registry.gitlab.com/speedodevo/todo-app/todo-service-dev
+          context: src/todo-service
+          dockerfile: src/todo-service/dev.Dockerfile
+          tags:
+            - ${DEVSPACE_GIT_COMMIT}-${DEVSPACE_RANDOM}
+        todo-web-ui:
+          image: registry.gitlab.com/speedodevo/todo-app/todo-web-ui-dev
+          context: src/todo-web-ui
+          dockerfile: src/todo-web-ui/dev.Dockerfile
+          tags:
+            - ${DEVSPACE_GIT_COMMIT}-${DEVSPACE_RANDOM}
+      deployments:
+        - name: devspace
+          helm:
+            chart:
+              name: deploy/helm
+            values:
+              todo-service:
+                image: registry.gitlab.com/speedodevo/todo-app/todo-service-dev
+                serviceType: NodePort
+                postgresql:
+                  postgresqlPassword: ${TODO_SERVICE_POSTGRESQL_PASSWORD}
+              todo-web-ui:
+                image: registry.gitlab.com/speedodevo/todo-app/todo-web-ui-dev
+                serviceType: NodePort
+commands:
+  - name: dev
+    command: devspace dev -p dev
