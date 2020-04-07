@@ -1,5 +1,5 @@
 default:
-  image: registry.gitlab.com/speedodevo/skaffold:v1.5.0
+  image: registry.gitlab.com/speedodevo/devsapce:v4.10.0
 
   services:
     - docker:19.03.8-dind
@@ -15,9 +15,9 @@ variables:
 stages:
   - deploy
 
-skaffold:
+deploy:
   stage: deploy
   script:
-    - skaffold run -p okteto
+    - devspace deploy -p okteto
   only:
     - master

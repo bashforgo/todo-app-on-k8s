@@ -6,12 +6,14 @@ images:
     dockerfile: src/todo-service/Dockerfile
     tags:
       - ${DEVSPACE_GIT_COMMIT}
+      - latest
   todo-web-ui:
     image: registry.gitlab.com/speedodevo/todo-app/todo-web-ui
     context: src/todo-web-ui
     dockerfile: src/todo-web-ui/Dockerfile
     tags:
       - ${DEVSPACE_GIT_COMMIT}
+      - latest
 deployments:
   - name: devspace
     helm:
@@ -32,6 +34,11 @@ dev:
       - todo-service
       - todo-web-ui
   sync:
+    - imageName: todo-service
+      localSubPath: src/todo-service/TodoService
+      excludePaths:
+        - bin/
+        - obj/
     - imageName: todo-web-ui
       localSubPath: src/todo-web-ui
       excludePaths:
@@ -39,6 +46,12 @@ dev:
         - www/
         - .stencil/
 profiles:
+  - name: okteto
+    patches:
+      - op: add
+        path: deployments[0].helm.valuesFiles
+        value:
+          - deploy/helm/okteto-values.yaml
   - name: dev
     replace:
       images:
