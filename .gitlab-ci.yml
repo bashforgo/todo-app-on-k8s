@@ -1,5 +1,5 @@
 default:
-  image: registry.gitlab.com/speedodevo/devsapce:v4.10.0
+  image: registry.gitlab.com/speedodevo/devspace:v4.10.0
 
   services:
     - docker:19.03.8-dind
