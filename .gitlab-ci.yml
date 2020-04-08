@@ -1,5 +1,5 @@
 default:
-  image: registry.gitlab.com/speedodevo/devspace:v4.10.0
+  image: registry.gitlab.com/speedodevo/devspace:v4.11.1
 
   services:
     - docker:19.03.8-dind
@@ -18,6 +18,6 @@ stages:
 deploy:
   stage: deploy
   script:
-    - devspace deploy -p okteto
+    - devspace run deploy-okteto
   only:
     - master

@@ -90,3 +90,5 @@ profiles:
 commands:
   - name: dev
     command: devspace dev -p dev
+  - name: deploy-okteto
+    command: devspace deploy -p okteto
