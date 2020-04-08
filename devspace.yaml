@@ -52,6 +52,12 @@ profiles:
         path: deployments[0].helm.valuesFiles
         value:
           - deploy/helm/okteto-values.yaml
+      - op: add
+        path: images.todo-service.createPullSecret
+        value: false
+      - op: add
+        path: images.todo-web-ui.createPullSecret
+        value: false
   - name: dev
     replace:
       images:
