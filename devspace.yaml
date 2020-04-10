@@ -33,6 +33,9 @@ dev:
     images:
       - todo-service
       - todo-web-ui
+    paths:
+      - src/todo-web-ui/*
+      - src/todo-service/*
   sync:
     - imageName: todo-service
       localSubPath: src/todo-service/TodoService
