@@ -1,12 +1,18 @@
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using TodoService.Infrastructure;
+using TodoService.Infrastructure.Configuration;
+using TodoService.Infrastructure.Services;
 
 namespace TodoService
 {
@@ -35,6 +41,42 @@ namespace TodoService
                 var connectionString = string.Join(';', connectionStringPieces);
                 options.UseNpgsql(connectionString);
             });
+
+            var issuer = Configuration.GetSection("Security:Tokens:Issuer").Value;
+            var audience = Configuration.GetSection("Security:Tokens:Audience").Value;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TOKEN_KEY"]));
+
+            services.AddSingleton(new TokenConfiguration(issuer, audience, key));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = issuer,
+
+                        ValidateAudience = true,
+                        ValidAudience = audience,
+
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = key,
+
+                        ClockSkew = TimeSpan.FromMinutes(5),
+                        RequireExpirationTime = true,
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            context.Token = context.Request.Cookies["authorization"];
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
+            services.AddSingleton<ITokenService, TokenService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
@@ -45,6 +87,8 @@ namespace TodoService
             }
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

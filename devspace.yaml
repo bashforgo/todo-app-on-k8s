@@ -22,6 +22,7 @@ deployments:
       values:
         todo-service:
           image: registry.gitlab.com/speedodevo/todo-app/todo-service
+          tokenKey: ${TODO_SERVICE_TOKEN_KEY}
           postgresql:
             postgresqlPassword: ${TODO_SERVICE_POSTGRESQL_PASSWORD}
         todo-web-ui:
@@ -85,6 +86,7 @@ profiles:
               todo-service:
                 image: registry.gitlab.com/speedodevo/todo-app/todo-service-dev
                 serviceType: NodePort
+                tokenKey: ${TODO_SERVICE_TOKEN_KEY}
                 postgresql:
                   postgresqlPassword: ${TODO_SERVICE_POSTGRESQL_PASSWORD}
               todo-web-ui:

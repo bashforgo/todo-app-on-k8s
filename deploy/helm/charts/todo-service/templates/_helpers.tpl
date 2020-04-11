@@ -10,13 +10,9 @@ app.kubernetes.io/component: backend
 {{- end -}}
 
 {{- define "todo-service.postgres-env" -}}
-env:
-  - name: POSTGRES_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: {{ include "todo-service.fullname" . }}
-        key: postgresql-password
 envFrom:
   - configMapRef:
+      name: {{ template "todo-service.fullname" . }}
+  - secretRef:
       name: {{ template "todo-service.fullname" . }}
 {{- end -}}

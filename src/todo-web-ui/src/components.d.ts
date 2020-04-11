@@ -11,8 +11,14 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 export namespace Components {
   interface AppAuth {}
+  interface AppAuthGuard {
+    'authenticated': () => any;
+    'unauthenticated': () => any;
+  }
   interface AppAuthPage {}
   interface AppHeader {}
+  interface AppHome {}
+  interface AppHomePage {}
   interface AppRoot {}
 }
 
@@ -23,6 +29,12 @@ declare global {
   var HTMLAppAuthElement: {
     prototype: HTMLAppAuthElement;
     new (): HTMLAppAuthElement;
+  };
+
+  interface HTMLAppAuthGuardElement extends Components.AppAuthGuard, HTMLStencilElement {}
+  var HTMLAppAuthGuardElement: {
+    prototype: HTMLAppAuthGuardElement;
+    new (): HTMLAppAuthGuardElement;
   };
 
   interface HTMLAppAuthPageElement extends Components.AppAuthPage, HTMLStencilElement {}
@@ -37,6 +49,18 @@ declare global {
     new (): HTMLAppHeaderElement;
   };
 
+  interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {}
+  var HTMLAppHomeElement: {
+    prototype: HTMLAppHomeElement;
+    new (): HTMLAppHomeElement;
+  };
+
+  interface HTMLAppHomePageElement extends Components.AppHomePage, HTMLStencilElement {}
+  var HTMLAppHomePageElement: {
+    prototype: HTMLAppHomePageElement;
+    new (): HTMLAppHomePageElement;
+  };
+
   interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {}
   var HTMLAppRootElement: {
     prototype: HTMLAppRootElement;
@@ -44,22 +68,34 @@ declare global {
   };
   interface HTMLElementTagNameMap {
     'app-auth': HTMLAppAuthElement;
+    'app-auth-guard': HTMLAppAuthGuardElement;
     'app-auth-page': HTMLAppAuthPageElement;
     'app-header': HTMLAppHeaderElement;
+    'app-home': HTMLAppHomeElement;
+    'app-home-page': HTMLAppHomePageElement;
     'app-root': HTMLAppRootElement;
   }
 }
 
 declare namespace LocalJSX {
   interface AppAuth {}
+  interface AppAuthGuard {
+    'authenticated': () => any;
+    'unauthenticated': () => any;
+  }
   interface AppAuthPage {}
   interface AppHeader {}
+  interface AppHome {}
+  interface AppHomePage {}
   interface AppRoot {}
 
   interface IntrinsicElements {
     'app-auth': AppAuth;
+    'app-auth-guard': AppAuthGuard;
     'app-auth-page': AppAuthPage;
     'app-header': AppHeader;
+    'app-home': AppHome;
+    'app-home-page': AppHomePage;
     'app-root': AppRoot;
   }
 }
@@ -71,8 +107,11 @@ declare module "@stencil/core" {
   export namespace JSX {
     interface IntrinsicElements {
       'app-auth': LocalJSX.AppAuth & JSXBase.HTMLAttributes<HTMLAppAuthElement>;
+      'app-auth-guard': LocalJSX.AppAuthGuard & JSXBase.HTMLAttributes<HTMLAppAuthGuardElement>;
       'app-auth-page': LocalJSX.AppAuthPage & JSXBase.HTMLAttributes<HTMLAppAuthPageElement>;
       'app-header': LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
+      'app-home': LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
+      'app-home-page': LocalJSX.AppHomePage & JSXBase.HTMLAttributes<HTMLAppHomePageElement>;
       'app-root': LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
     }
   }

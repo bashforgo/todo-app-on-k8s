@@ -1,5 +1,6 @@
 todo-service:
   image: image of the todo-service
+  tokenKey: key for jwt tokens
   postgresql:
     postgresqlPassword: the password to use in potgres
 todo-web-ui:
