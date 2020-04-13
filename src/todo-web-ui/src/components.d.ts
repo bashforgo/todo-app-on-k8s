@@ -8,16 +8,21 @@
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
-  User,
+  ITodo,
+  IUser,
 } from './models';
+import {
+  IconName,
+} from '@fortawesome/free-solid-svg-icons';
 
 export namespace Components {
   interface AppAuth {}
   interface AppAuthGuard {
-    'authenticated': (user: User) => any;
+    'authenticated': (user: IUser) => any;
     'unauthenticated': () => any;
   }
   interface AppAuthPage {}
+  interface AppCard {}
   interface AppDropdown {
     'class'?: string;
   }
@@ -25,7 +30,14 @@ export namespace Components {
   interface AppHeader {}
   interface AppHome {}
   interface AppHomePage {}
+  interface AppIcon {
+    'icon': IconName;
+  }
   interface AppRoot {}
+  interface AppTodo {
+    'todo': ITodo;
+  }
+  interface AppTodoList {}
 }
 
 declare global {
@@ -47,6 +59,12 @@ declare global {
   var HTMLAppAuthPageElement: {
     prototype: HTMLAppAuthPageElement;
     new (): HTMLAppAuthPageElement;
+  };
+
+  interface HTMLAppCardElement extends Components.AppCard, HTMLStencilElement {}
+  var HTMLAppCardElement: {
+    prototype: HTMLAppCardElement;
+    new (): HTMLAppCardElement;
   };
 
   interface HTMLAppDropdownElement extends Components.AppDropdown, HTMLStencilElement {}
@@ -79,31 +97,54 @@ declare global {
     new (): HTMLAppHomePageElement;
   };
 
+  interface HTMLAppIconElement extends Components.AppIcon, HTMLStencilElement {}
+  var HTMLAppIconElement: {
+    prototype: HTMLAppIconElement;
+    new (): HTMLAppIconElement;
+  };
+
   interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {}
   var HTMLAppRootElement: {
     prototype: HTMLAppRootElement;
     new (): HTMLAppRootElement;
   };
+
+  interface HTMLAppTodoElement extends Components.AppTodo, HTMLStencilElement {}
+  var HTMLAppTodoElement: {
+    prototype: HTMLAppTodoElement;
+    new (): HTMLAppTodoElement;
+  };
+
+  interface HTMLAppTodoListElement extends Components.AppTodoList, HTMLStencilElement {}
+  var HTMLAppTodoListElement: {
+    prototype: HTMLAppTodoListElement;
+    new (): HTMLAppTodoListElement;
+  };
   interface HTMLElementTagNameMap {
     'app-auth': HTMLAppAuthElement;
     'app-auth-guard': HTMLAppAuthGuardElement;
     'app-auth-page': HTMLAppAuthPageElement;
+    'app-card': HTMLAppCardElement;
     'app-dropdown': HTMLAppDropdownElement;
     'app-dropdown-item': HTMLAppDropdownItemElement;
     'app-header': HTMLAppHeaderElement;
     'app-home': HTMLAppHomeElement;
     'app-home-page': HTMLAppHomePageElement;
+    'app-icon': HTMLAppIconElement;
     'app-root': HTMLAppRootElement;
+    'app-todo': HTMLAppTodoElement;
+    'app-todo-list': HTMLAppTodoListElement;
   }
 }
 
 declare namespace LocalJSX {
   interface AppAuth {}
   interface AppAuthGuard {
-    'authenticated': (user: User) => any;
+    'authenticated': (user: IUser) => any;
     'unauthenticated': () => any;
   }
   interface AppAuthPage {}
+  interface AppCard {}
   interface AppDropdown {
     'class'?: string;
   }
@@ -113,18 +154,31 @@ declare namespace LocalJSX {
   interface AppHeader {}
   interface AppHome {}
   interface AppHomePage {}
+  interface AppIcon {
+    'icon': IconName;
+  }
   interface AppRoot {}
+  interface AppTodo {
+    'onAppTodoDelete'?: (event: CustomEvent<ITodo>) => void;
+    'onAppTodoToggle'?: (event: CustomEvent<ITodo>) => void;
+    'todo': ITodo;
+  }
+  interface AppTodoList {}
 
   interface IntrinsicElements {
     'app-auth': AppAuth;
     'app-auth-guard': AppAuthGuard;
     'app-auth-page': AppAuthPage;
+    'app-card': AppCard;
     'app-dropdown': AppDropdown;
     'app-dropdown-item': AppDropdownItem;
     'app-header': AppHeader;
     'app-home': AppHome;
     'app-home-page': AppHomePage;
+    'app-icon': AppIcon;
     'app-root': AppRoot;
+    'app-todo': AppTodo;
+    'app-todo-list': AppTodoList;
   }
 }
 
@@ -137,12 +191,16 @@ declare module "@stencil/core" {
       'app-auth': LocalJSX.AppAuth & JSXBase.HTMLAttributes<HTMLAppAuthElement>;
       'app-auth-guard': LocalJSX.AppAuthGuard & JSXBase.HTMLAttributes<HTMLAppAuthGuardElement>;
       'app-auth-page': LocalJSX.AppAuthPage & JSXBase.HTMLAttributes<HTMLAppAuthPageElement>;
+      'app-card': LocalJSX.AppCard & JSXBase.HTMLAttributes<HTMLAppCardElement>;
       'app-dropdown': LocalJSX.AppDropdown & JSXBase.HTMLAttributes<HTMLAppDropdownElement>;
       'app-dropdown-item': LocalJSX.AppDropdownItem & JSXBase.HTMLAttributes<HTMLAppDropdownItemElement>;
       'app-header': LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
       'app-home': LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
       'app-home-page': LocalJSX.AppHomePage & JSXBase.HTMLAttributes<HTMLAppHomePageElement>;
+      'app-icon': LocalJSX.AppIcon & JSXBase.HTMLAttributes<HTMLAppIconElement>;
       'app-root': LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+      'app-todo': LocalJSX.AppTodo & JSXBase.HTMLAttributes<HTMLAppTodoElement>;
+      'app-todo-list': LocalJSX.AppTodoList & JSXBase.HTMLAttributes<HTMLAppTodoListElement>;
     }
   }
 }

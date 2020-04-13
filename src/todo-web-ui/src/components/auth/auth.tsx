@@ -38,46 +38,38 @@ export class Auth {
 
   render() {
     return (
-      <section class="row justify-content-center pt-5">
-        <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Log in</h5>
-              <form
-                class={this.error ? 'is-invalid' : undefined}
-                onSubmit={this.onSubmit}
-              >
-                <div class="form-group">
-                  <label htmlFor="app-auth-username">Username</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="app-auth-username"
-                    value={this.username}
-                    onInput={this.onUsernameChange}
-                  />
-                </div>
-                <div class="form-group">
-                  <label htmlFor="app-auth-password">Password</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="app-auth-password"
-                    value={this.password}
-                    onInput={this.onPasswordChange}
-                  />
-                </div>
-                <button type="submit" class="btn btn-primary">
-                  Submit
-                </button>
-              </form>
-              {this.error && (
-                <span class="invalid-feedback">Couldn't login</span>
-              )}
-            </div>
+      <app-card>
+        <span slot="title">Log in</span>
+        <form
+          class={this.error ? 'is-invalid' : undefined}
+          onSubmit={this.onSubmit}
+        >
+          <div class="form-group">
+            <label htmlFor="app-auth-username">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="app-auth-username"
+              value={this.username}
+              onInput={this.onUsernameChange}
+            />
           </div>
-        </div>
-      </section>
+          <div class="form-group">
+            <label htmlFor="app-auth-password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="app-auth-password"
+              value={this.password}
+              onInput={this.onPasswordChange}
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">
+            Submit
+          </button>
+        </form>
+        {this.error && <span class="invalid-feedback">Couldn't login</span>}
+      </app-card>
     );
   }
 }

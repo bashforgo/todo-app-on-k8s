@@ -1,24 +1,22 @@
 import { BehaviorSubject, noop } from 'rxjs';
-import { first } from 'rxjs/operators';
-import { User } from '../models';
+import { IUser } from '../models';
 import { HttpService } from './http';
 
 const IDENTITY_URL = 'identity';
 
 class AuthServiceImpl {
-  private _user = new BehaviorSubject<User | null>(null);
+  private _user = new BehaviorSubject<IUser | null>(null);
   public user = this._user.asObservable();
 
   initialCheck = this.check().catch(noop);
 
-  async check(): Promise<User> {
+  async check(): Promise<IUser> {
     const response = await HttpService.get(IDENTITY_URL);
 
     if (response.ok) {
-      const user: User = await response.json();
-      const result = this.user.pipe(first()).toPromise();
+      const user: IUser = await response.json();
       this._user.next(user);
-      return result as Promise<User>;
+      return user;
     }
 
     this._user.next(null);
@@ -28,16 +26,15 @@ class AuthServiceImpl {
   async login(credentials: {
     username: string;
     password: string;
-  }): Promise<User> {
+  }): Promise<IUser> {
     const response = await HttpService.post(IDENTITY_URL, {
       body: JSON.stringify(credentials),
     });
 
     if (response.ok) {
-      const user: User = await response.json();
-      const result = this.user.pipe(first()).toPromise();
+      const user: IUser = await response.json();
       this._user.next(user);
-      return result as Promise<User>;
+      return user;
     }
 
     this._user.next(null);

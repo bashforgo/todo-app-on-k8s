@@ -29,7 +29,7 @@ namespace TodoService.Controllers
         public IActionResult Self()
         {
             var id = int.Parse(HttpContext.User.FindFirst("Id").Value);
-            var user = Context.Users.Include(u => u.Todos).First(u => u.Id == id);
+            var user = Context.Users.First(u => u.Id == id);
             return Ok(user);
         }
 
@@ -40,7 +40,7 @@ namespace TodoService.Controllers
             {
                 try
                 {
-                    var user = Context.Users.Include(u => u.Todos).First(u => u.Name == credentials.Username);
+                    var user = Context.Users.First(u => u.Name == credentials.Username);
 
                     var claims = new List<Claim> {
                         new Claim("Name", user.Name),

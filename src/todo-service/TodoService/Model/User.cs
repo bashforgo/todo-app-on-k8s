@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace TodoService.Model
 {
@@ -8,6 +9,7 @@ namespace TodoService.Model
 
         public string Name { get; set; }
 
+        [JsonIgnore]
         public List<TodoItem> Todos { get; } = new List<TodoItem>();
     }
 }

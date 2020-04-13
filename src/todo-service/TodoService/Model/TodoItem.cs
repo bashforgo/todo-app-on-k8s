@@ -8,6 +8,8 @@ namespace TodoService.Model
 
         public string Title { get; set; }
         public bool Complete { get; set; }
+
+        [JsonIgnore]
         public bool Deleted { get; set; }
 
         [JsonIgnore]

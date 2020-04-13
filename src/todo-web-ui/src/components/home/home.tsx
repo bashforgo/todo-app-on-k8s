@@ -7,6 +7,6 @@ import { Component, h } from '@stencil/core';
 })
 export class Home {
   render() {
-    return <div>authenticated</div>;
+    return <app-todo-list />;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, h, State } from '@stencil/core';
-import { User } from '../../models';
+import { IUser } from '../../models';
 import { AuthService } from '../../services';
 import { noop, Subscribe } from '../../utils';
 
@@ -9,13 +9,13 @@ import { noop, Subscribe } from '../../utils';
   shadow: true,
 })
 export class Header {
-  @State() @Subscribe(AuthService.user) user: User | null = null;
+  @State() @Subscribe(AuthService.user) user: IUser | null = null;
 
   logout() {
     AuthService.logout().catch(noop);
   }
 
-  authenticated(user: User) {
+  authenticated(user: IUser) {
     return (
       <ul class="navbar-nav">
         <li class="nav-item">

@@ -4,7 +4,7 @@ type SafeResponse = Response | { ok: false };
 
 class HttpServiceImpl {
   public request(
-    url: string,
+    url: string | string[],
     {
       headers: headersInit,
       method = 'GET',
@@ -15,7 +15,7 @@ class HttpServiceImpl {
     const headers = new Headers(headersInit);
     headers.append('Content-Type', 'application/json');
 
-    return fetch(`${BASE_URL}/${url}`, {
+    return fetch([BASE_URL, ...(Array.isArray(url) ? url : [url])].join('/'), {
       headers,
       method,
       credentials,
@@ -23,16 +23,32 @@ class HttpServiceImpl {
     }).catch(() => ({ ok: false }));
   }
 
-  public get(url: string, options?: RequestInit): Promise<SafeResponse> {
+  public get(
+    url: string | string[],
+    options?: RequestInit,
+  ): Promise<SafeResponse> {
     return this.request(url, { method: 'GET', ...options });
   }
 
-  public post(url: string, options?: RequestInit): Promise<SafeResponse> {
+  public post(
+    url: string | string[],
+    options?: RequestInit,
+  ): Promise<SafeResponse> {
     return this.request(url, { method: 'POST', ...options });
   }
 
-  public delete(url: string, options?: RequestInit): Promise<SafeResponse> {
+  public delete(
+    url: string | string[],
+    options?: RequestInit,
+  ): Promise<SafeResponse> {
     return this.request(url, { method: 'DELETE', ...options });
+  }
+
+  public put(
+    url: string | string[],
+    options?: RequestInit,
+  ): Promise<SafeResponse> {
+    return this.request(url, { method: 'PUT', ...options });
   }
 }
 
