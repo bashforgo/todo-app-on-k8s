@@ -1,5 +1,7 @@
 const BASE_URL = '/api/v1';
 
+type SafeResponse = Response | { ok: false };
+
 class HttpServiceImpl {
   public request(
     url: string,
@@ -8,8 +10,8 @@ class HttpServiceImpl {
       method = 'GET',
       credentials = 'same-origin',
       ...options
-    }: RequestInit = {}
-  ): Promise<Response> {
+    }: RequestInit = {},
+  ): Promise<SafeResponse> {
     const headers = new Headers(headersInit);
     headers.append('Content-Type', 'application/json');
 
@@ -18,15 +20,19 @@ class HttpServiceImpl {
       method,
       credentials,
       ...options,
-    });
+    }).catch(() => ({ ok: false }));
   }
 
-  public get(url: string, options?: RequestInit): Promise<Response> {
+  public get(url: string, options?: RequestInit): Promise<SafeResponse> {
     return this.request(url, { method: 'GET', ...options });
   }
 
-  public post(url: string, options?: RequestInit): Promise<Response> {
+  public post(url: string, options?: RequestInit): Promise<SafeResponse> {
     return this.request(url, { method: 'POST', ...options });
+  }
+
+  public delete(url: string, options?: RequestInit): Promise<SafeResponse> {
+    return this.request(url, { method: 'DELETE', ...options });
   }
 }
 

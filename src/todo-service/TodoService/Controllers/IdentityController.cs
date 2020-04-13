@@ -60,6 +60,14 @@ namespace TodoService.Controllers
 
             return Unauthorized();
         }
+
+        [Authorize]
+        [HttpDelete]
+        public IActionResult Logout()
+        {
+            HttpContext.Response.Cookies.Delete("authorization");
+            return Ok();
+        }
     }
 
     public class Credentials

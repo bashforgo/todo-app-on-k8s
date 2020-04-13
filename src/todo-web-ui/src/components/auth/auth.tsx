@@ -1,5 +1,6 @@
 import { Component, h, State } from '@stencil/core';
 import { AuthService } from '../../services';
+import { noop } from '../../utils';
 
 @Component({
   tag: 'app-auth',
@@ -30,7 +31,7 @@ export class Auth {
     event.preventDefault();
 
     const { username, password } = this;
-    const user = await AuthService.login({ username, password });
+    const user = await AuthService.login({ username, password }).catch(noop);
 
     this.error = !user;
   };
@@ -41,7 +42,7 @@ export class Auth {
         <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Login</h5>
+              <h5 class="card-title">Log in</h5>
               <form
                 class={this.error ? 'is-invalid' : undefined}
                 onSubmit={this.onSubmit}

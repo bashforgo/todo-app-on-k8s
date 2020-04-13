@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, noop } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { User } from '../models';
 import { HttpService } from './http';
@@ -9,41 +9,50 @@ class AuthServiceImpl {
   private _user = new BehaviorSubject<User | null>(null);
   public user = this._user.asObservable();
 
-  initialCheck = this.check();
+  initialCheck = this.check().catch(noop);
 
-  async check(): Promise<User | null> {
+  async check(): Promise<User> {
     const response = await HttpService.get(IDENTITY_URL);
-
-    const result = this.user.pipe(first()).toPromise();
 
     if (response.ok) {
       const user: User = await response.json();
+      const result = this.user.pipe(first()).toPromise();
       this._user.next(user);
-    } else {
-      this._user.next(null);
+      return result as Promise<User>;
     }
 
-    return result;
+    this._user.next(null);
+    return Promise.reject();
   }
 
   async login(credentials: {
     username: string;
     password: string;
-  }): Promise<User | null> {
+  }): Promise<User> {
     const response = await HttpService.post(IDENTITY_URL, {
       body: JSON.stringify(credentials),
     });
 
-    const result = this.user.pipe(first()).toPromise();
-
     if (response.ok) {
       const user: User = await response.json();
+      const result = this.user.pipe(first()).toPromise();
       this._user.next(user);
-    } else {
-      this._user.next(null);
+      return result as Promise<User>;
     }
 
-    return result;
+    this._user.next(null);
+    return Promise.reject();
+  }
+
+  async logout(): Promise<void> {
+    const response = await HttpService.delete(IDENTITY_URL);
+
+    if (response.ok) {
+      this._user.next(null);
+      return;
+    }
+
+    return Promise.reject();
   }
 }
 

@@ -7,15 +7,21 @@
 
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
-
+import {
+  User,
+} from './models';
 
 export namespace Components {
   interface AppAuth {}
   interface AppAuthGuard {
-    'authenticated': () => any;
+    'authenticated': (user: User) => any;
     'unauthenticated': () => any;
   }
   interface AppAuthPage {}
+  interface AppDropdown {
+    'class'?: string;
+  }
+  interface AppDropdownItem {}
   interface AppHeader {}
   interface AppHome {}
   interface AppHomePage {}
@@ -41,6 +47,18 @@ declare global {
   var HTMLAppAuthPageElement: {
     prototype: HTMLAppAuthPageElement;
     new (): HTMLAppAuthPageElement;
+  };
+
+  interface HTMLAppDropdownElement extends Components.AppDropdown, HTMLStencilElement {}
+  var HTMLAppDropdownElement: {
+    prototype: HTMLAppDropdownElement;
+    new (): HTMLAppDropdownElement;
+  };
+
+  interface HTMLAppDropdownItemElement extends Components.AppDropdownItem, HTMLStencilElement {}
+  var HTMLAppDropdownItemElement: {
+    prototype: HTMLAppDropdownItemElement;
+    new (): HTMLAppDropdownItemElement;
   };
 
   interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {}
@@ -70,6 +88,8 @@ declare global {
     'app-auth': HTMLAppAuthElement;
     'app-auth-guard': HTMLAppAuthGuardElement;
     'app-auth-page': HTMLAppAuthPageElement;
+    'app-dropdown': HTMLAppDropdownElement;
+    'app-dropdown-item': HTMLAppDropdownItemElement;
     'app-header': HTMLAppHeaderElement;
     'app-home': HTMLAppHomeElement;
     'app-home-page': HTMLAppHomePageElement;
@@ -80,10 +100,16 @@ declare global {
 declare namespace LocalJSX {
   interface AppAuth {}
   interface AppAuthGuard {
-    'authenticated': () => any;
+    'authenticated': (user: User) => any;
     'unauthenticated': () => any;
   }
   interface AppAuthPage {}
+  interface AppDropdown {
+    'class'?: string;
+  }
+  interface AppDropdownItem {
+    'onAppClick'?: (event: CustomEvent<any>) => void;
+  }
   interface AppHeader {}
   interface AppHome {}
   interface AppHomePage {}
@@ -93,6 +119,8 @@ declare namespace LocalJSX {
     'app-auth': AppAuth;
     'app-auth-guard': AppAuthGuard;
     'app-auth-page': AppAuthPage;
+    'app-dropdown': AppDropdown;
+    'app-dropdown-item': AppDropdownItem;
     'app-header': AppHeader;
     'app-home': AppHome;
     'app-home-page': AppHomePage;
@@ -109,6 +137,8 @@ declare module "@stencil/core" {
       'app-auth': LocalJSX.AppAuth & JSXBase.HTMLAttributes<HTMLAppAuthElement>;
       'app-auth-guard': LocalJSX.AppAuthGuard & JSXBase.HTMLAttributes<HTMLAppAuthGuardElement>;
       'app-auth-page': LocalJSX.AppAuthPage & JSXBase.HTMLAttributes<HTMLAppAuthPageElement>;
+      'app-dropdown': LocalJSX.AppDropdown & JSXBase.HTMLAttributes<HTMLAppDropdownElement>;
+      'app-dropdown-item': LocalJSX.AppDropdownItem & JSXBase.HTMLAttributes<HTMLAppDropdownItemElement>;
       'app-header': LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
       'app-home': LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
       'app-home-page': LocalJSX.AppHomePage & JSXBase.HTMLAttributes<HTMLAppHomePageElement>;

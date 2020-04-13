@@ -1,38 +1,24 @@
 import { Component, Prop, State } from '@stencil/core';
-import {
-  ComponentDidUnload,
-  ComponentWillLoad,
-} from '@stencil/router/dist/types/stencil.core';
-import { Subscription } from 'rxjs';
+import { ComponentWillLoad } from '@stencil/router/dist/types/stencil.core';
 import { User } from '../../models';
 import { AuthService } from '../../services';
+import { Subscribe } from '../../utils';
 
 @Component({
   tag: 'app-auth-guard',
   shadow: true,
 })
-export class AuthGuard implements ComponentWillLoad, ComponentDidUnload {
-  @Prop() authenticated!: () => any;
+export class AuthGuard implements ComponentWillLoad {
+  @Prop() authenticated!: (user: User) => any;
   @Prop() unauthenticated!: () => any;
 
-  @State() user: User | null = null;
-
-  sub?: Subscription;
+  @State() @Subscribe(AuthService.user) user: User | null = null;
 
   async componentWillLoad(): Promise<void> {
-    this.sub = AuthService.user.subscribe((user) => {
-      this.user = user;
-    });
     await AuthService.initialCheck;
   }
 
-  componentDidUnload() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
-  }
-
   render() {
-    return this.user ? this.authenticated() : this.unauthenticated();
+    return this.user ? this.authenticated(this.user) : this.unauthenticated();
   }
 }
