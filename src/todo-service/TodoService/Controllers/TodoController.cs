@@ -32,15 +32,15 @@ namespace TodoService.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] TodoItem todo)
         {
-            var fresh = new TodoItem
+            var fresh = new TodoItem()
             {
-                Title = todo.Title,
+                Title = todo.Title.Trim(),
             };
 
             var userId = int.Parse(HttpContext.User.FindFirst("Id").Value);
-            var user = await Context.Users.Include(u => u.Todos).FirstAsync(u => u.Id == userId);
+            var user = await Context.Users.FirstAsync(u => u.Id == userId);
 
-            user.Todos.Append(fresh);
+            user.Todos.Add(fresh);
 
             await Context.SaveChangesAsync();
 
@@ -51,7 +51,6 @@ namespace TodoService.Controllers
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TodoItem todo)
         {
             var todos = Context.Todos.Where(t => t.Id == id);
-
             if (todos.Count() != 1)
             {
                 return BadRequest();
@@ -64,7 +63,6 @@ namespace TodoService.Controllers
             await Context.SaveChangesAsync();
 
             return Ok(existingTodo);
-
         }
 
         [HttpDelete("{id}")]
@@ -76,7 +74,7 @@ namespace TodoService.Controllers
                 return BadRequest();
             }
 
-            var existingTodo = todos.First();
+            var existingTodo = await todos.FirstAsync();
 
             var userId = int.Parse(HttpContext.User.FindFirst("Id").Value);
             if (existingTodo.OwnerId != userId)

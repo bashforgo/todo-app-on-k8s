@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ITodo } from '../models';
 import { HttpService } from './http';
 
@@ -23,20 +23,16 @@ class TodoServiceImpl {
 
   async update(todo: ITodo): Promise<ITodo> {
     const response = await HttpService.put([TODOS_URL, `${todo.id}`], {
-      body: JSON.stringify(todo),
+      json: todo,
     });
 
     if (response.ok) {
       const fresh: ITodo = await response.json();
-      this._todos
-        .pipe(
-          first(),
-          filter((t): t is ITodo[] => Array.isArray(t)),
-        )
-        .subscribe(todos => {
-          const next = todos.map(t => (t.id === fresh.id ? fresh : t));
-          this._todos.next(next);
-        });
+      const todos = this.getTodos();
+      if (todos) {
+        const next = todos.map(t => (t.id === fresh.id ? fresh : t));
+        this._todos.next(next);
+      }
       return fresh;
     }
 
@@ -47,19 +43,46 @@ class TodoServiceImpl {
     const response = await HttpService.delete([TODOS_URL, `${todo.id}`]);
 
     if (response.ok) {
-      this._todos
-        .pipe(
-          first(),
-          filter((t): t is ITodo[] => Array.isArray(t)),
-        )
-        .subscribe(todos => {
-          const next = todos.filter(t => t.id !== todo.id);
-          this._todos.next(next);
-        });
+      const todos = this.getTodos();
+      if (todos) {
+        const next = todos.filter(t => t.id !== todo.id);
+        this._todos.next(next);
+      }
       return Promise.resolve();
     }
 
     return Promise.reject();
+  }
+
+  async new<T extends Pick<ITodo, 'title'>>(todo: T): Promise<ITodo> {
+    const response = await HttpService.post(TODOS_URL, { json: todo });
+
+    if (response.ok) {
+      const todo: ITodo = await response.json();
+      const todos = this.getTodos();
+      if (todos) {
+        const next = todos.concat(todo);
+        this._todos.next(next);
+      } else {
+        this._todos.next([todo]);
+      }
+      return todo;
+    }
+
+    return Promise.reject();
+  }
+
+  async deleteCompleted(): Promise<void> {
+    const todos = this._todos.value;
+    if (todos) {
+      const toDelete = todos.filter(t => t.complete).map(t => this.delete(t));
+      await Promise.all(toDelete);
+      await this.list();
+    }
+  }
+
+  private getTodos(): ITodo[] | null {
+    return this._todos.value;
   }
 }
 

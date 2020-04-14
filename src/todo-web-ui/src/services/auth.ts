@@ -28,7 +28,7 @@ class AuthServiceImpl {
     password: string;
   }): Promise<IUser> {
     const response = await HttpService.post(IDENTITY_URL, {
-      body: JSON.stringify(credentials),
+      json: credentials,
     });
 
     if (response.ok) {
