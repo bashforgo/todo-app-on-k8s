@@ -34,9 +34,9 @@ export class Header {
     return (
       <nav class="navbar navbar-dark bg-dark">
         <div class="container">
-          <a class="navbar-brand" href="#">
+          <stencil-route-link url="/" anchorClass="navbar-brand">
             Todo
-          </a>
+          </stencil-route-link>
 
           {this.user && this.authenticated(this.user)}
         </div>

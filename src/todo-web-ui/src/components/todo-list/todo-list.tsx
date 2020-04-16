@@ -82,7 +82,6 @@ export class TodoList implements ComponentInterface {
         <form class="form-row mt-3" onSubmit={this.onNewTodoSubmit}>
           <div class="col">
             <input
-              id="app-auth-username"
               class="form-control"
               type="text"
               placeholder="New todo"

@@ -33,6 +33,8 @@ export namespace Components {
   interface AppIcon {
     'icon': IconName;
   }
+  interface AppRegister {}
+  interface AppRegisterPage {}
   interface AppRoot {}
   interface AppTodo {
     'todo': ITodo;
@@ -103,6 +105,18 @@ declare global {
     new (): HTMLAppIconElement;
   };
 
+  interface HTMLAppRegisterElement extends Components.AppRegister, HTMLStencilElement {}
+  var HTMLAppRegisterElement: {
+    prototype: HTMLAppRegisterElement;
+    new (): HTMLAppRegisterElement;
+  };
+
+  interface HTMLAppRegisterPageElement extends Components.AppRegisterPage, HTMLStencilElement {}
+  var HTMLAppRegisterPageElement: {
+    prototype: HTMLAppRegisterPageElement;
+    new (): HTMLAppRegisterPageElement;
+  };
+
   interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {}
   var HTMLAppRootElement: {
     prototype: HTMLAppRootElement;
@@ -131,6 +145,8 @@ declare global {
     'app-home': HTMLAppHomeElement;
     'app-home-page': HTMLAppHomePageElement;
     'app-icon': HTMLAppIconElement;
+    'app-register': HTMLAppRegisterElement;
+    'app-register-page': HTMLAppRegisterPageElement;
     'app-root': HTMLAppRootElement;
     'app-todo': HTMLAppTodoElement;
     'app-todo-list': HTMLAppTodoListElement;
@@ -157,6 +173,8 @@ declare namespace LocalJSX {
   interface AppIcon {
     'icon': IconName;
   }
+  interface AppRegister {}
+  interface AppRegisterPage {}
   interface AppRoot {}
   interface AppTodo {
     'onAppTodoDelete'?: (event: CustomEvent<ITodo>) => void;
@@ -176,6 +194,8 @@ declare namespace LocalJSX {
     'app-home': AppHome;
     'app-home-page': AppHomePage;
     'app-icon': AppIcon;
+    'app-register': AppRegister;
+    'app-register-page': AppRegisterPage;
     'app-root': AppRoot;
     'app-todo': AppTodo;
     'app-todo-list': AppTodoList;
@@ -198,6 +218,8 @@ declare module "@stencil/core" {
       'app-home': LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
       'app-home-page': LocalJSX.AppHomePage & JSXBase.HTMLAttributes<HTMLAppHomePageElement>;
       'app-icon': LocalJSX.AppIcon & JSXBase.HTMLAttributes<HTMLAppIconElement>;
+      'app-register': LocalJSX.AppRegister & JSXBase.HTMLAttributes<HTMLAppRegisterElement>;
+      'app-register-page': LocalJSX.AppRegisterPage & JSXBase.HTMLAttributes<HTMLAppRegisterPageElement>;
       'app-root': LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
       'app-todo': LocalJSX.AppTodo & JSXBase.HTMLAttributes<HTMLAppTodoElement>;
       'app-todo-list': LocalJSX.AppTodoList & JSXBase.HTMLAttributes<HTMLAppTodoListElement>;

@@ -76,6 +76,11 @@ namespace TodoService.Controllers
 
             var existingTodo = await todos.FirstAsync();
 
+            if (existingTodo.Deleted)
+            {
+                return BadRequest();
+            }
+
             var userId = int.Parse(HttpContext.User.FindFirst("Id").Value);
             if (existingTodo.OwnerId != userId)
             {

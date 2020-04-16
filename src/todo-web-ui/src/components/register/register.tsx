@@ -3,15 +3,15 @@ import { AuthService } from '../../services';
 import { Bind, noop } from '../../utils';
 
 @Component({
-  tag: 'app-auth',
-  styleUrl: 'auth.scss',
+  tag: 'app-register',
+  styleUrl: 'register.scss',
   shadow: true,
 })
-export class Auth {
+export class Register {
   @State() username = '';
-  @State() password = '';
 
   @State() error = false;
+  @State() redirect = false;
 
   @Bind()
   onUsernameChange(event: Event): void {
@@ -22,27 +22,24 @@ export class Auth {
   }
 
   @Bind()
-  onPasswordChange(event: Event): void {
-    if (event.target) {
-      const input = event.target as HTMLInputElement;
-      this.password = input.value;
-    }
-  }
-
-  @Bind()
   async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
 
-    const { username, password } = this;
-    const user = await AuthService.login({ username, password }).catch(noop);
+    const user = await AuthService.new({ username: this.username }).catch(noop);
 
-    this.error = !user;
+    if (user) {
+      this.redirect = true;
+    } else {
+      this.error = true;
+    }
   }
 
   render() {
-    return (
+    return this.redirect ? (
+      <stencil-router-redirect url="/" />
+    ) : (
       <app-card>
-        <span slot="title">Log in</span>
+        <span slot="title">Register</span>
         <form
           class={this.error ? 'is-invalid' : undefined}
           onSubmit={this.onSubmit}
@@ -52,26 +49,15 @@ export class Auth {
             <input
               type="text"
               class="form-control"
-              id="app-auth-username"
               value={this.username}
               onInput={this.onUsernameChange}
-            />
-          </div>
-          <div class="form-group">
-            <label htmlFor="app-auth-password">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="app-auth-password"
-              value={this.password}
-              onInput={this.onPasswordChange}
             />
           </div>
           <button type="submit" class="btn btn-primary">
             Submit
           </button>
         </form>
-        {this.error && <span class="invalid-feedback">Couldn't login</span>}
+        {this.error && <span class="invalid-feedback">Couldn't register</span>}
       </app-card>
     );
   }

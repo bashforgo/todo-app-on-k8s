@@ -1,4 +1,5 @@
 import { Component, h } from '@stencil/core';
+import { Bind } from '../../utils';
 
 @Component({
   tag: 'app-root',
@@ -6,10 +7,20 @@ import { Component, h } from '@stencil/core';
 })
 export class Root {
   authenticated() {
-    return <stencil-route component="app-home-page" />;
+    return <app-home-page />;
   }
   unauthenticated() {
-    return <stencil-route component="app-auth-page" />;
+    return <app-auth-page />;
+  }
+
+  @Bind()
+  baseRoute() {
+    return (
+      <app-auth-guard
+        authenticated={this.authenticated}
+        unauthenticated={this.unauthenticated}
+      />
+    );
   }
 
   render() {
@@ -17,10 +28,8 @@ export class Root {
       <stencil-router>
         <app-header />
         <stencil-route-switch scrollTopOffset={0}>
-          <app-auth-guard
-            authenticated={this.authenticated}
-            unauthenticated={this.unauthenticated}
-          />
+          <stencil-route url="/" exact routeRender={this.baseRoute} />
+          <stencil-route url="/register" component="app-register-page" />
         </stencil-route-switch>
       </stencil-router>
     );

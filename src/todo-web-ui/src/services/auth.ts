@@ -3,6 +3,7 @@ import { IUser } from '../models';
 import { HttpService } from './http';
 
 const IDENTITY_URL = 'identity';
+const NEW_URL = 'new';
 
 class AuthServiceImpl {
   private _user = new BehaviorSubject<IUser | null>(null);
@@ -49,6 +50,21 @@ class AuthServiceImpl {
       return;
     }
 
+    return Promise.reject();
+  }
+
+  async new(user: { username: string }): Promise<IUser> {
+    const response = await HttpService.post([IDENTITY_URL, NEW_URL], {
+      json: user,
+    });
+
+    if (response.ok) {
+      const user: IUser = await response.json();
+      this._user.next(user);
+      return user;
+    }
+
+    this._user.next(null);
     return Promise.reject();
   }
 }
