@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -19,11 +18,16 @@ namespace TodoService.Controllers
     {
         private readonly TodoContext Context;
         private readonly ITokenService TokenService;
+        private readonly IPasswordService PasswordService;
 
-        public IdentityController(TodoContext context, ITokenService tokenService)
+        public IdentityController(
+            TodoContext context,
+            ITokenService tokenService,
+            IPasswordService passwordService)
         {
             Context = context;
             TokenService = tokenService;
+            PasswordService = passwordService;
         }
 
         [Authorize]
@@ -39,11 +43,6 @@ namespace TodoService.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] Credentials credentials)
         {
-            if (credentials.Username != credentials.Password)
-            {
-                return Unauthorized();
-            }
-
             var users = Context.Users.Where(u => u.Name == credentials.Username);
 
             if (await users.CountAsync() != 1)
@@ -52,6 +51,12 @@ namespace TodoService.Controllers
             }
 
             var user = await users.FirstAsync();
+
+            if (!PasswordService.Check(credentials.Password, user.Password, user.Salt))
+            {
+                return Unauthorized();
+            }
+
             AuthorizeUser(user);
 
             return Ok(user);
@@ -66,9 +71,9 @@ namespace TodoService.Controllers
         }
 
         [HttpPost("new")]
-        public async Task<IActionResult> Create([FromBody] PartialUser partial)
+        public async Task<IActionResult> Create([FromBody] Credentials credentials)
         {
-            var name = partial.Username;
+            var name = credentials.Username;
 
             var users = Context.Users.Where(u => u.Name == name).Count();
             if (0 < users)
@@ -76,7 +81,19 @@ namespace TodoService.Controllers
                 return BadRequest();
             }
 
-            var user = new User() { Name = name };
+            var pass = credentials.Password;
+            if (pass.Length < 8)
+            {
+                return BadRequest();
+            }
+
+            var salt = PasswordService.CreateSalt();
+            var user = new User()
+            {
+                Name = name,
+                Salt = salt,
+                Password = PasswordService.Hash(credentials.Password, salt)
+            };
             Context.Users.Add(user);
 
             user.Todos.Add(new TodoItem() { Title = "Welcome!" });
@@ -98,7 +115,9 @@ namespace TodoService.Controllers
                 };
             var token = TokenService.GenerateToken(claims);
 
-            HttpContext.Response.Cookies.Append("authorization", new JwtSecurityTokenHandler().WriteToken(token));
+            HttpContext.Response.Cookies.Append(
+                "authorization",
+                new JwtSecurityTokenHandler().WriteToken(token));
         }
     }
 
@@ -106,10 +125,5 @@ namespace TodoService.Controllers
     {
         public string Username { get; set; }
         public string Password { get; set; }
-    }
-
-    public class PartialUser
-    {
-        public string Username { get; set; }
     }
 }

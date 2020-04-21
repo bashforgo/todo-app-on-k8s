@@ -9,6 +9,7 @@ import { Bind, noop } from '../../utils';
 })
 export class Register {
   @State() username = '';
+  @State() password = '';
 
   @State() error = false;
   @State() redirect = false;
@@ -22,10 +23,19 @@ export class Register {
   }
 
   @Bind()
+  onPasswordChange(event: Event): void {
+    if (event.target) {
+      const input = event.target as HTMLInputElement;
+      this.password = input.value;
+    }
+  }
+
+  @Bind()
   async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
 
-    const user = await AuthService.new({ username: this.username }).catch(noop);
+    const { username, password } = this;
+    const user = await AuthService.new({ username, password }).catch(noop);
 
     if (user) {
       this.redirect = true;
@@ -51,6 +61,15 @@ export class Register {
               class="form-control"
               value={this.username}
               onInput={this.onUsernameChange}
+            />
+          </div>
+          <div class="form-group">
+            <label htmlFor="app-auth-password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              value={this.password}
+              onInput={this.onPasswordChange}
             />
           </div>
           <button type="submit" class="btn btn-primary">

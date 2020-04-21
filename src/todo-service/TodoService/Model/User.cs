@@ -10,6 +10,11 @@ namespace TodoService.Model
         public string Name { get; set; }
 
         [JsonIgnore]
+        public string Salt { get; set; }
+        [JsonIgnore]
+        public string Password { get; set; }
+
+        [JsonIgnore]
         public List<TodoItem> Todos { get; } = new List<TodoItem>();
     }
 }

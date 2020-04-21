@@ -5,6 +5,11 @@ import { HttpService } from './http';
 const IDENTITY_URL = 'identity';
 const NEW_URL = 'new';
 
+interface Credentials {
+  username: string;
+  password: string;
+}
+
 class AuthServiceImpl {
   private _user = new BehaviorSubject<IUser | null>(null);
   public user = this._user.asObservable();
@@ -24,10 +29,7 @@ class AuthServiceImpl {
     return Promise.reject();
   }
 
-  async login(credentials: {
-    username: string;
-    password: string;
-  }): Promise<IUser> {
+  async login(credentials: Credentials): Promise<IUser> {
     const response = await HttpService.post(IDENTITY_URL, {
       json: credentials,
     });
@@ -53,7 +55,7 @@ class AuthServiceImpl {
     return Promise.reject();
   }
 
-  async new(user: { username: string }): Promise<IUser> {
+  async new(user: Credentials): Promise<IUser> {
     const response = await HttpService.post([IDENTITY_URL, NEW_URL], {
       json: user,
     });

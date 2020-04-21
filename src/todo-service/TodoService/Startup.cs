@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TodoService.DataMigrations;
 using TodoService.Infrastructure;
 using TodoService.Infrastructure.Configuration;
 using TodoService.Infrastructure.Services;
@@ -77,9 +78,14 @@ namespace TodoService
                 });
 
             services.AddSingleton<ITokenService, TokenService>();
+            services.AddSingleton<IPasswordService, PasswordService>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            TodoContext todoContext,
+            IPasswordService passwordService)
         {
             if (env.IsDevelopment())
             {
@@ -95,12 +101,9 @@ namespace TodoService
                 endpoints.MapControllers();
             });
 
-            var todoContext = (TodoContext)serviceProvider.GetService(typeof(TodoContext));
-            using (todoContext)
-            {
-                todoContext.Database.Migrate();
-                new TodoContextSeed(todoContext).DoSeed();
-            }
+            todoContext.Database.Migrate();
+            new TodoContextSeed(todoContext).DoSeed();
+            new TodoContextAddUserCredentials(todoContext, passwordService).DoMigration();
         }
     }
 }
